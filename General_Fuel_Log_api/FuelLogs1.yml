@@ -1,0 +1,348 @@
+openapi: 3.0.0
+info:
+  title: "Fuel_log_API_Documentation"
+  description: "This API contains Fuel_log"
+  version: 1.0.0
+    
+servers: 
+  - url: "dadafuel.com"
+
+tags: 
+  - name: "general_fuel_log"
+paths: 
+  /general_fuel_log:
+     get:
+      summary: "This endpoint to get fuel log list"
+      tags:
+       - general_fuel_log
+      responses:
+        "200":
+            description: "Fuellog list successfully obtained"
+            content: 
+                application/json:
+                 schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Get200'
+                    
+        "404":
+            description: "Not Found"
+            content:
+                application/json:
+                    schema: 
+                        $ref: '#/components/schemas/Get404'
+                        
+        "401": 
+            description: "You are unauthorized to access the requested resource."
+            content: 
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/UnauthorizedMessage'
+                        
+        "503":
+            description: "The server is currently unavailable."
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/InternalError503'
+                        
+                        
+                        
+     post: 
+      summary: "This endpoint is for dding new data to fuellog list"
+      tags: 
+        - "general_fuel_log"
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
+      responses:
+
+        "200":
+          description: "Fuellog list successfully posted"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post200'
+                        
+        "401":
+          description: "You are unauthorized to access the requested resource."
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnauthorizedMessage'
+                        
+                        
+        "400":
+          description: "Invalid syntax for this request was provided"
+          content: 
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+                        
+        "503":
+          description: "The server is currently unavailable."
+          content: 
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/InternalError503'
+                  
+  /general_fuel_log/{general_fuel_log_id}:
+    parameters:
+      - in: path
+        name: general_fuel_log_id
+        schema:
+          type: integer
+        required: true
+        description: "general fuel log id"   
+        
+    get:
+      tags:
+       - general_fuel_log_id
+      responses:
+       "200":
+        description: "Found successfully"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetFuelLbyId'
+       "401":
+           description: "You are unauthorized to access the requested resource."
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/UnauthorizedMessage'
+       "404":
+        description: "Not found"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Get404'
+       "503":
+        description: "The server is currently unavailable."
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternalError503'
+
+    patch:
+      tags: 
+        - general_fuel_log
+      summary: "Modifying information of general_fuel_log  by given general_fuel_log_id"
+      requestBody:
+        description: "Body for updating general fuellog"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFuelLbody'        
+
+      responses:
+        "200":
+          description: "general fuel log successfully updated"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateFuelLok'
+        "400":
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        "401":
+          description: "You are unauthorized to access the requested resource."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        "503":
+          description: "The server is currently unavailable."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError503'  
+
+
+    delete:
+      tags: 
+        - general_fuel_log
+      summary: "This endpoint is for deleting general fuel log"
+      
+      responses:
+        "200":
+          description: "Fuel_log successfully deleted"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteFuelLbyId'
+        "401":
+          description: "You are unauthorized to access the requested resource."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        "404":
+          description: "Not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Get404'
+        "503":
+          description: "503 Service Unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError503'          
+
+
+
+
+components:
+  schemas:
+  # get , patch, delete single 
+    DeleteFuelLbyId:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Congrats! Deleted successfully"    
+
+    UpdateFuelLok:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "General fuel log updated Successfully"
+        id:
+          type: integer
+        gfl_fuel_log: 
+          type: integer
+  
+
+    UpdateFuelLbody:
+      type: object
+      properties:
+        attribute:
+          type: string
+          example: value
+        attribute2:
+          type: string
+          example: value2   
+
+
+
+
+    GetFuelLbyId:
+      type: object
+      properties:
+        id:
+          type: integer
+        gfl_fuel_log: 
+          type: integer
+
+
+
+  # post
+    PostRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        gfl_fuel_log: 
+          type: integer
+     
+    Post200:
+      type: object
+      properties: 
+        id:
+          type: integer
+        message:
+          type: string
+          example: "Fuel log added"
+        created_at:
+          type: string
+        
+    UnauthorizedMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "You are unauthorized to access the requested resource.Please log in."     
+
+
+    BadRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Bad request"
+
+
+
+ # get 
+ 
+  
+    Get200:
+      type: object
+      properties:
+        id:
+          type: integer
+        gfl_fuel_log: 
+          type: integer
+       
+
+    Get404:
+     type: object 
+     properties:
+       message:
+         type: string
+         example: "Not found"
+     
+    InternalError503:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "The server is currently unavailable."              
+        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+            
+
+                        
+                        
+                        
+                
+  
+
+   
+                   
+                   
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+            
+
+                        
+                        
+                        
+                
+  
+
+   
